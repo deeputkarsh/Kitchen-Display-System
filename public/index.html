@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Kitchen Display System</title>
+	<style type="text/css">
+		body{
+			height: 100vh;
+			overflow: auto;
+			margin: auto;
+			display: flex;
+			justify-content: center;
+			flex-direction: column;
+		}
+		table{
+			border: 1px solid;
+			border-collapse: collapse;
+			margin: 10px auto;
+		}
+		td,th{
+			border: 1px solid;
+			padding: 5px;
+		}
+		input {
+			border: none;
+			outline: none;
+		}
+	</style>
+	<script type="text/javascript">
+		let serviceRequestCount = 0;
+		function fetchJson(url,options){
+			serviceRequestCount++;
+			return fetch(url,options).then(response=>{
+				serviceRequestCount--;
+				if(!serviceRequestCount && url != '/kitchenItem/getAll'){
+					setTimeout(()=>{
+						getAllItems();
+					},100)
+				}
+				return response.json();
+			}).catch(err=>console.log(err));
+		}
+		function placeOrder(ele) {
+			const allInputs = ele.querySelectorAll('input');
+			let postObj = {};
+			for (var i = allInputs.length - 1; i >= 0; i--) {
+				const curr = allInputs[i];
+				postObj[curr.name] = curr.value;
+			}
+			fetchJson('/kitchenItem/placeOrder',{
+		        method: "POST", // *GET, POST, PUT, DELETE, etc.
+		        headers: {
+		            "Content-Type": "application/json; charset=utf-8",
+		        },
+		        referrer: "no-referrer", // no-referrer, *client
+		        body: JSON.stringify(postObj) // body data type must match "Content-Type" header
+			}).then(data=>console.log(data));
+		}
+		function getAllItems(){
+			fetchJson('/kitchenItem/getAll')
+			.then(data=>{
+				data.isSuccess && paintData(data.data)
+			});
+		}
+		function paintData(data){
+			const tbodyNode = document.querySelector('.kitchen-status-display tbody');
+			const tableHtml = data.reduce((acc,val)=>{
+				return `${acc}
+					<tr>
+						<td>${val.name}</td>
+						<td>${val.quantity}</td>
+						<td>${val.createdTillNow}</td>
+						<td>${val.predictedValue}</td>
+						<td><button ${!val.quantity?'disabled':''} onclick="markAsDone('${val.id}')">DONE</button></td>
+					</tr>`
+				;
+			},'');
+			tbodyNode && (tbodyNode.innerHTML = tableHtml);
+		}
+		function markAsDone(id){
+			fetchJson('/kitchenItem/markAsDone',{
+		        method: "POST",
+		        headers: {
+		            "Content-Type": "application/json; charset=utf-8",
+		        },
+		        referrer: "no-referrer",
+		        body: JSON.stringify({id})
+			}).then(data=>console.log(data));
+		}
+		function setHotUpdate(){
+			let isVisibleEventTriggered = false;
+			document.addEventListener("visibilitychange", function() {
+				isVisibleEventTriggered = document.visibilityState == "visible";
+				isVisibleEventTriggered && getAllItems();
+			});
+			window.onfocus = function() {
+				isVisibleEventTriggered || getAllItems();
+				isVisibleEventTriggered = false;
+			}
+		}
+		getAllItems();
+		setHotUpdate();
+	</script>
+</head>
+<body>
+	<table>
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Quantity</th>
+				<th>Status</th>
+				<th><a href="/kitchenItem/getReport">Generate Report</a></th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<td><input type="text" name="dishName" value="Jumbo Chicken Wrap" /></td>
+				<td><input type="number" name="quantity" value="1" min="0" max="50" /></td>
+				<td>Pending</td>
+				<td><button onclick="placeOrder(this.parentElement.parentElement)">Place Order</button></td>
+			</tr>
+		</tbody>
+	</table>
+	<table class="kitchen-status-display">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Quantity</th>
+				<th>Created-till-now</th>
+				<th>Predicted</th>
+				<th>Status</th>
+			</tr>
+		</thead>
+		<tbody><!-- Values Here --></tbody>
+	</table>
+</body>
+</html>

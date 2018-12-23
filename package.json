@@ -1,0 +1,20 @@
+{
+  "name": "kitchen-display-system",
+  "version": "1.0.0",
+  "description": "simple login api which has login logout and session functionality",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.9",
+    "pg": "^7.6.0",
+    "tempfile": "^2.0.0",
+    "xlsx": "^0.14.0"
+  }
+}
