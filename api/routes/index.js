@@ -1,4 +1,4 @@
-import KitchenItemRouter from './KitchenItem'
+import KitchenItemRouter from './kitchen-item'
 import { publicPath, httpStatus } from '../constants'
 
 const RouteData = [ { path: '/kitchenItem', router: KitchenItemRouter } ]

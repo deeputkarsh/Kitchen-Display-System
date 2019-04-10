@@ -5,10 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "babel-node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "babel-node server.js"
   },
-  "author": "",
+  "author": "Utkarsh Deep",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
