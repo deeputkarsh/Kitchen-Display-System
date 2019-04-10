@@ -1,5 +1,7 @@
 import XLSX from 'xlsx'
 import { KitchenItem } from '../models'
+import { createFile } from './common-functions'
+import { reportPath } from '../constants'
 
 export const createAndFillWorkbook = (items) => {
   let workbook = XLSX.utils.book_new()
@@ -16,7 +18,11 @@ export const createAndFillWorkbook = (items) => {
   })
   const workSheet = XLSX.utils.json_to_sheet(sheetData, sheetHeader)
   XLSX.utils.book_append_sheet(workbook, workSheet, 'My sheet')
-  return workbook
+  const fileName = 'latest-kitchen-report.xlsx'
+  createFile(fileName)
+  const filePath = reportPath + fileName
+  XLSX.writeFile(workbook, filePath, { type: 'buffer', bookType: 'xlsx' })
+  return filePath
 }
 export const calcPredictedValue = (data) => {
   const mSecInDay = 86400000

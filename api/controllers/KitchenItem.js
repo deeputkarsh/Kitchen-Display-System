@@ -54,7 +54,7 @@ export const KitchenItemController = {
     }
     return response
   },
-  getReport: async function () {
+  createReportXlsx: async function () {
     const allItems = await this.getAll()
     return createAndFillWorkbook(allItems)
   }

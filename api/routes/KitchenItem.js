@@ -1,5 +1,4 @@
 import express from 'express'
-import XLSX from 'xlsx'
 import { asyncMiddleware } from '../utils'
 import { KitchenItemController } from '../controllers'
 
@@ -25,9 +24,8 @@ router.post('/markAsDone', asyncMiddleware(async (req, res) => {
   return res.send({ isSuccess: true, data })
 }))
 router.get('/getReport', asyncMiddleware(async (req, res) => {
-  const workbook = await KitchenItemController.getReport()
-  XLSX.writeFile(workbook, './reports/LatestKitchenReport.xlsx', { type: 'buffer', bookType: 'xlsx' })
-  res.download('./reports/LatestKitchenReport.xlsx')
+  const filePath = await KitchenItemController.createReportXlsx()
+  res.download(filePath)
 }))
 
 export default router
