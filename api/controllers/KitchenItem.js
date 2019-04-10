@@ -1,8 +1,8 @@
-const KitchenItem = require('../models/KitchenItem.model')
-const XLSX = require('xlsx')
+import { KitchenItem } from '../models'
+import XLSX from 'xlsx'
 
 // Simple version, without validation or sanitation
-module.exports = {
+export const KitchenItemController = {
   placeOrder: async (data) => {
     let item = await getItemByName(data)
     let response = null
