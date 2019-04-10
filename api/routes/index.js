@@ -1,14 +1,11 @@
 import KitchenItemRouter from './KitchenItem'
-import { httpStatus } from '../constants/httpstatuscodes'
-import path from 'path'
-
-const publicPath = process.env.PUBLIC_PATH
+import { publicPath, httpStatus } from '../constants'
 
 const RouteData = [ { path: '/kitchenItem', router: KitchenItemRouter } ]
 
 export const Routes = (app) => {
   // Setting application routes
-  app.get('/', (req, res) => res.sendFile('/index.html', { root: path.join(__dirname, '../../', publicPath) }))
+  app.get('/', (req, res) => res.sendFile('/index.html', { root: publicPath }))
 
   RouteData.forEach((route) => app.use(route.path, route.router))
 

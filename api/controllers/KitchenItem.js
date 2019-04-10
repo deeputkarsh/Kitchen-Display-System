@@ -1,5 +1,12 @@
-import { KitchenItem } from '../models'
-import XLSX from 'xlsx'
+import {
+  calcPredictedValue,
+  createNewItem,
+  updateItem,
+  getAllItems,
+  getItemByName,
+  getItemById,
+  createAndFillWorkbook
+} from '../utils'
 
 // Simple version, without validation or sanitation
 export const KitchenItemController = {
@@ -51,89 +58,4 @@ export const KitchenItemController = {
     const allItems = await this.getAll()
     return createAndFillWorkbook(allItems)
   }
-}
-const createAndFillWorkbook = (items) => {
-  let workbook = XLSX.utils.book_new()
-  let sheetHeader = {
-    header: ['Dish_name', 'Produced', 'Predicted']
-  }
-  let sheetData = []
-  items.forEach(item => {
-    sheetData.push({
-      'Dish_name': item.name,
-      'Produced': item.createdTillNow,
-      'Predicted': item.predictedValue
-    })
-  })
-  const workSheet = XLSX.utils.json_to_sheet(sheetData, sheetHeader)
-  XLSX.utils.book_append_sheet(workbook, workSheet, 'My sheet')
-  return workbook
-}
-const calcPredictedValue = (data) => {
-  const mSecInDay = 86400000
-  const mSecPassedToday = Date.now() - (new Date()).setHours(0, 0, 0, 0)
-  let predictedValue = data.createdTillNow / mSecPassedToday
-  predictedValue = predictedValue * mSecInDay
-  predictedValue = Math.round(predictedValue * 100) / 100
-  return predictedValue
-}
-const createNewItem = (data) => {
-  let newItem = new KitchenItem({
-    name: data.dishName,
-    quantity: data.quantity,
-    createdTillNow: 0
-  })
-  return new Promise((resolve, reject) => {
-    newItem.save((err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve('Item Created')
-      }
-    })
-  })
-}
-const updateItem = (data) => {
-  return new Promise((resolve, reject) => {
-    KitchenItem.findByIdAndUpdate(data._id, data, (err) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve('Item Updated')
-      }
-    })
-  })
-}
-const getAllItems = () => {
-  return new Promise((resolve, reject) => {
-    KitchenItem.find({}, (err, items) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(items)
-      }
-    })
-  })
-}
-const getItemByName = (data) => {
-  return new Promise((resolve, reject) => {
-    KitchenItem.findOne({ name: data.dishName }, (err, item) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(item)
-      }
-    })
-  })
-}
-const getItemById = (id) => {
-  return new Promise((resolve, reject) => {
-    KitchenItem.findById(id, (err, item) => {
-      if (err) {
-        reject(err)
-      } else {
-        resolve(item)
-      }
-    })
-  })
 }
