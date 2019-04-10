@@ -1,8 +1,7 @@
 import express from 'express'
-import { Routes } from './routes'
-import { connectMongo } from './config/connectmongo'
-import { errorHandler } from './config/errorhandler'
 import bodyParser from 'body-parser'
+import { Routes } from './routes'
+import { connectMongo, errorHandler } from './config'
 
 // Initiate express
 const app = express()
