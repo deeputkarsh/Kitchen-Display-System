@@ -35,14 +35,18 @@ const connectMongo = async () => {
   const connectionuri = `mongodb://${authstr}${MONGO_HOSTS}/${MONGO_DBNAME}${replicaSet}`
 
   log(connectionuri)
-
-  await mongoose.connect(connectionuri, {
-    autoReconnect: true,
-    connectTimeoutMS: 5000,
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true
-  })
+  try {
+    await mongoose.connect(connectionuri, {
+      autoReconnect: true,
+      connectTimeoutMS: 5000,
+      useNewUrlParser: true,
+      useFindAndModify: false,
+      useCreateIndex: true
+    })
+  } catch (error) {
+    log("ERROR: Couldn't connect to mongo")
+    process.exit(1)
+  }
 }
 
 export { connectMongo }

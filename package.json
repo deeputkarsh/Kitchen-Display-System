@@ -8,7 +8,8 @@
     "start-dev": "nodemon server.js",
     "dev": "DEBUG=app nodemon --exec babel-node server.js",
     "build": "rm -rf build && ./node_modules/.bin/babel . --out-dir build --ignore node_modules && cp .env build && cp -r public build",
-    "serve": "DEBUG=app node build/server.js"
+    "serve": "DEBUG=app node build/server.js",
+    "debug": "DEBUG=app node build/server.js"
   },
   "author": "Utkarsh Deep",
   "license": "ISC",
