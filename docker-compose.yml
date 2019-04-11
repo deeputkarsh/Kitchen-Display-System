@@ -1,6 +1,8 @@
 version: '3'
 services:
   kds-node:
+    container_name: kds-container
+    image: kds
     build: .
     ports:
      - "8080:8080"
