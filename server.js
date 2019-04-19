@@ -1,22 +1,19 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
-const config = require('./config');
-const path = require('path');
-const KitchenItem = require('./routes/KitchenItem.route');
-const app = express();
+require('dotenv').config()
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+/*
+* Code to check if required enviroment variables are set to run the application
+*/
 
-const mongoDB = process.env.MONGODB_URI || config.mongoUrl;
-mongoose.connect(mongoDB,{ useNewUrlParser: true });
-mongoose.Promise = global.Promise;
-const db = mongoose.connection;
-db.on('error', console.error.bind(console, 'MongoDB connection error:'));
+const applicationEnvVars = [ 'NODE_ENV', 'PORT', 'MONGO_URI' ]
 
-app.get('/', (req, res) => res.sendFile('/index.html',{ root: path.join(__dirname, config.publicPath) }));
-app.use('/kitchenItem', KitchenItem);
+let unusedEnvVars = applicationEnvVars.filter((i) => !process.env[i])
 
+if (unusedEnvVars.length) {
+  throw new Error('Required ENV variables are not set: [' + unusedEnvVars.join(', ') + ']')
+}
 
-app.listen(config.port, () => console.log(`Kitchen Display System running on port ${config.port}!`));
+const { initApp } = require('./api')
+
+initApp().then(app => {
+  app.listen(process.env.PORT, () => console.log(`Kitchen Display System running on port ${process.env.PORT}!`))
+})

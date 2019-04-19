@@ -4,17 +4,25 @@
   "description": "simple login api which has login logout and session functionality",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node build/server.js",
+    "start-dev": "DEBUG=app nodemon --exec babel-node server.js",
+    "build": "rm -rf build && ./node_modules/.bin/babel . --out-dir build --ignore node_modules && cp .env build && cp -r public build",
+    "debug": "DEBUG=app node build/server.js"
   },
-  "author": "",
+  "author": "Utkarsh Deep",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "dotenv": "^7.0.0",
     "express": "^4.16.4",
     "mongoose": "^5.3.9",
-    "pg": "^7.6.0",
-    "tempfile": "^2.0.0",
     "xlsx": "^0.14.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.3",
+    "@babel/core": "^7.4.3",
+    "@babel/node": "^7.2.2",
+    "@babel/preset-env": "^7.4.3",
+    "nodemon": "^1.18.11"
   }
 }
