@@ -29,10 +29,11 @@ mongoose.connection.on('error', (error) => {
 mongoose.set('debug', process.env.MONGO_DEBUG)
 
 const connectMongo = async () => {
-  const { MONGO_USER, MONGO_PASS, MONGO_REPLICA_SET, MONGO_HOSTS, MONGO_DBNAME } = process.env
+  /* const { MONGO_USER, MONGO_PASS, MONGO_REPLICA_SET, MONGO_HOSTS, MONGO_DBNAME } = process.env
   const authstr = MONGO_USER && MONGO_PASS ? `${MONGO_USER}:${MONGO_PASS}@` : ''
   const replicaSet = MONGO_REPLICA_SET ? `?replicaSet=${MONGO_REPLICA_SET}` : ''
-  const connectionuri = `mongodb://${authstr}${MONGO_HOSTS}/${MONGO_DBNAME}${replicaSet}`
+  const connectionuri = `mongodb://${authstr}${MONGO_HOSTS}/${MONGO_DBNAME}${replicaSet}` */
+  const connectionuri = process.env.MONGO_URI
 
   log(connectionuri)
   try {
