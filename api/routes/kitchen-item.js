@@ -1,31 +1,56 @@
-import express from 'express'
-import { asyncMiddleware } from '../utils'
-import { KitchenItemController } from '../controllers'
+"use strict";
 
-const router = express.Router()
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
 
-router.post('/placeOrder', asyncMiddleware(async (req, res) => {
-  const data = req.body
-  const responseData = KitchenItemController.placeOrder(data)
-  return res.send({ isSuccess: true, data: responseData })
-}))
-router.get('/getAll', asyncMiddleware(async (req, res) => {
-  const data = await KitchenItemController.getAll()
-  return res.send({ isSuccess: true, data })
-}))
-router.all('/getPredictedValues', asyncMiddleware(async (req, res) => {
-  const option = req.body || {}
-  const data = await KitchenItemController.getPredictedValues(option)
-  return res.send({ isSuccess: true, data })
-}))
-router.post('/markAsDone', asyncMiddleware(async (req, res) => {
-  const option = req.body || {}
-  const data = await KitchenItemController.markAsDone(option)
-  return res.send({ isSuccess: true, data })
-}))
-router.get('/getReport', asyncMiddleware(async (req, res) => {
-  const filePath = await KitchenItemController.createReportXlsx()
-  res.download(filePath)
-}))
+var _express = _interopRequireDefault(require("express"));
 
-export default router
+var _utils = require("../utils");
+
+var _controllers = require("../controllers");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+const router = _express.default.Router();
+
+router.post('/placeOrder', (0, _utils.asyncMiddleware)(async (req, res) => {
+  const data = req.body;
+
+  const responseData = _controllers.KitchenItemController.placeOrder(data);
+
+  return res.send({
+    isSuccess: true,
+    data: responseData
+  });
+}));
+router.get('/getAll', (0, _utils.asyncMiddleware)(async (req, res) => {
+  const data = await _controllers.KitchenItemController.getAll();
+  return res.send({
+    isSuccess: true,
+    data
+  });
+}));
+router.all('/getPredictedValues', (0, _utils.asyncMiddleware)(async (req, res) => {
+  const option = req.body || {};
+  const data = await _controllers.KitchenItemController.getPredictedValues(option);
+  return res.send({
+    isSuccess: true,
+    data
+  });
+}));
+router.post('/markAsDone', (0, _utils.asyncMiddleware)(async (req, res) => {
+  const option = req.body || {};
+  const data = await _controllers.KitchenItemController.markAsDone(option);
+  return res.send({
+    isSuccess: true,
+    data
+  });
+}));
+router.get('/getReport', (0, _utils.asyncMiddleware)(async (req, res) => {
+  const filePath = await _controllers.KitchenItemController.createReportXlsx();
+  res.download(filePath);
+}));
+var _default = router;
+exports.default = _default;

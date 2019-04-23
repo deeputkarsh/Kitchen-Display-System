@@ -5,9 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "DEBUG=app nodemon --exec babel-node server.js",
-    "build": "rm -rf build && ./node_modules/.bin/babel . --out-dir build --ignore node_modules && cp .env build && cp -r public build",
-    "publish":"npm run build && cp package.json build",
     "debug": "DEBUG=app node server.js"
   },
   "author": "Utkarsh Deep",

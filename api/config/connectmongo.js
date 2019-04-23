@@ -1,53 +1,62 @@
-import mongoose from 'mongoose'
-import debug from 'debug'
+"use strict";
 
-const log = debug('app')
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.connectMongo = void 0;
 
-mongoose.Promise = Promise
+var _mongoose = _interopRequireDefault(require("mongoose"));
 
-mongoose.connection.on('connected', () => {
-  log('Connection Established')
-})
+var _debug = _interopRequireDefault(require("debug"));
 
-mongoose.connection.on('reconnected', () => {
-  log('Connection Reestablished')
-})
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-mongoose.connection.on('disconnected', () => {
-  log('Connection Disconnected')
-})
+const log = (0, _debug.default)('app');
+_mongoose.default.Promise = Promise;
 
-mongoose.connection.on('close', () => {
-  log('Connection Closed')
-})
+_mongoose.default.connection.on('connected', () => {
+  log('Connection Established');
+});
 
-mongoose.connection.on('error', (error) => {
-  log('ERROR: ' + error)
-  process.exit(1)
-})
+_mongoose.default.connection.on('reconnected', () => {
+  log('Connection Reestablished');
+});
 
-mongoose.set('debug', process.env.MONGO_DEBUG)
+_mongoose.default.connection.on('disconnected', () => {
+  log('Connection Disconnected');
+});
+
+_mongoose.default.connection.on('close', () => {
+  log('Connection Closed');
+});
+
+_mongoose.default.connection.on('error', error => {
+  log('ERROR: ' + error);
+  process.exit(1);
+});
+
+_mongoose.default.set('debug', process.env.MONGO_DEBUG);
 
 const connectMongo = async () => {
   /* const { MONGO_USER, MONGO_PASS, MONGO_REPLICA_SET, MONGO_HOSTS, MONGO_DBNAME } = process.env
   const authstr = MONGO_USER && MONGO_PASS ? `${MONGO_USER}:${MONGO_PASS}@` : ''
   const replicaSet = MONGO_REPLICA_SET ? `?replicaSet=${MONGO_REPLICA_SET}` : ''
   const connectionuri = `mongodb://${authstr}${MONGO_HOSTS}/${MONGO_DBNAME}${replicaSet}` */
-  const connectionuri = process.env.MONGO_URI
+  const connectionuri = process.env.MONGO_URI;
+  log(connectionuri);
 
-  log(connectionuri)
   try {
-    await mongoose.connect(connectionuri, {
+    await _mongoose.default.connect(connectionuri, {
       autoReconnect: true,
       connectTimeoutMS: 5000,
       useNewUrlParser: true,
       useFindAndModify: false,
       useCreateIndex: true
-    })
+    });
   } catch (error) {
-    log("ERROR: Couldn't connect to mongo")
-    process.exit(1)
+    log("ERROR: Couldn't connect to mongo");
+    process.exit(1);
   }
-}
+};
 
-export { connectMongo }
+exports.connectMongo = connectMongo;
