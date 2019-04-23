@@ -4,10 +4,11 @@
   "description": "simple login api which has login logout and session functionality",
   "main": "index.js",
   "scripts": {
-    "start": "node build/server.js",
-    "start-dev": "DEBUG=app nodemon --exec babel-node server.js",
+    "start": "node server.js",
+    "dev": "DEBUG=app nodemon --exec babel-node server.js",
     "build": "rm -rf build && ./node_modules/.bin/babel . --out-dir build --ignore node_modules && cp .env build && cp -r public build",
-    "debug": "DEBUG=app node build/server.js"
+    "publish":"npm run build && cp package.json build",
+    "debug": "DEBUG=app node server.js"
   },
   "author": "Utkarsh Deep",
   "license": "ISC",
