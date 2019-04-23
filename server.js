@@ -1,22 +1,19 @@
-"use strict";
+require('dotenv').config()
 
-require('dotenv').config();
 /*
 * Code to check if required enviroment variables are set to run the application
 */
 
+const applicationEnvVars = [ 'NODE_ENV', 'PORT', 'MONGO_URI' ]
 
-const applicationEnvVars = ['NODE_ENV', 'PORT', 'MONGO_URI'];
-let unusedEnvVars = applicationEnvVars.filter(i => !process.env[i]);
+let unusedEnvVars = applicationEnvVars.filter((i) => !process.env[i])
 
 if (unusedEnvVars.length) {
-  throw new Error('Required ENV variables are not set: [' + unusedEnvVars.join(', ') + ']');
+  throw new Error('Required ENV variables are not set: [' + unusedEnvVars.join(', ') + ']')
 }
 
-const {
-  initApp
-} = require('./api');
+const { initApp } = process.env.NODE_ENV === 'dev' ? require('./api') : require('./build/api')
 
 initApp().then(app => {
-  app.listen(process.env.PORT, () => console.log(`Kitchen Display System running on port ${process.env.PORT}!`));
-});
+  app.listen(process.env.PORT, () => console.log(`Kitchen Display System running on port ${process.env.PORT}!`))
+})

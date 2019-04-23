@@ -1,39 +1,23 @@
-"use strict";
+import express from 'express'
+import bodyParser from 'body-parser'
+import { Routes } from './routes'
+import { connectMongo, errorHandler } from './config'
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.initApp = void 0;
-
-var _express = _interopRequireDefault(require("express"));
-
-var _bodyParser = _interopRequireDefault(require("body-parser"));
-
-var _routes = require("./routes");
-
-var _config = require("./config");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const initApp = async () => {
+export const initApp = async () => {
   // Initiate express
-  const app = (0, _express.default)(); // Parse incoming request body
+  const app = express()
 
-  app.use(_bodyParser.default.json({
-    limit: '5mb'
-  }));
-  app.use(_bodyParser.default.urlencoded({
-    limit: '5mb',
-    extended: true,
-    parameterLimit: 50
-  })); // Create MongoDB connection
+  // Parse incoming request body
+  app.use(bodyParser.json({ limit: '5mb' }))
+  app.use(bodyParser.urlencoded({ limit: '5mb', extended: true, parameterLimit: 50 }))
 
-  await (0, _config.connectMongo)(); // Initiate all routes
+  // Create MongoDB connection
+  await connectMongo()
 
-  (0, _routes.Routes)(app); // Application level error handler
+  // Initiate all routes
+  Routes(app)
 
-  app.use(_config.errorHandler);
-  return app;
-};
-
-exports.initApp = initApp;
+  // Application level error handler
+  app.use(errorHandler)
+  return app
+}

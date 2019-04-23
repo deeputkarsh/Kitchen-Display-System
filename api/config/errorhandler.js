@@ -1,27 +1,13 @@
-"use strict";
+import debug from 'debug'
+import { httpStatus } from '../constants/httpstatuscodes'
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.errorHandler = void 0;
+const log = debug('app')
 
-var _debug = _interopRequireDefault(require("debug"));
+export const errorHandler = (err, req, res, next) => {
+  log(err)
 
-var _httpstatuscodes = require("../constants/httpstatuscodes");
+  if (err.name === 'AppError') return res.status(err.status || 500).json({ error: err.message })
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const log = (0, _debug.default)('app');
-
-const errorHandler = (err, req, res, next) => {
-  log(err);
-  if (err.name === 'AppError') return res.status(err.status || 500).json({
-    error: err.message
-  }); // Default handle error
-
-  return res.status(_httpstatuscodes.httpStatus.INTERNAL_SERVER_ERROR).json({
-    error: err.message || 'Something broke !'
-  });
-};
-
-exports.errorHandler = errorHandler;
+  // Default handle error
+  return res.status(httpStatus.INTERNAL_SERVER_ERROR).json({ error: err.message || 'Something broke !' })
+}

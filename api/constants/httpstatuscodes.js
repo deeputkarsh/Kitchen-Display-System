@@ -1,16 +1,10 @@
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.httpStatus = exports.msg = void 0;
-const msg = {
+export const msg = {
   success: 'Success',
   failed: 'Failed',
   notfound: 'No Record/s found'
-};
-exports.msg = msg;
-const httpStatus = {
+}
+
+export const httpStatus = {
   CONTINUE: '100',
   SWITCHING_PROTOCOLS: '101',
   PROCESSING: '102',
@@ -66,5 +60,4 @@ const httpStatus = {
   BANDWIDTH_LIMIT_EXCEEDED: '509',
   NOT_EXTENDED: '510',
   NETWORK_AUTHENTICATION_REQUIRED: '511'
-};
-exports.httpStatus = httpStatus;
+}

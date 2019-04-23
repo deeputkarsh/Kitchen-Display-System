@@ -1,137 +1,94 @@
-"use strict";
+import XLSX from 'xlsx'
+import { KitchenItem } from '../models'
+import { createFile } from './common-functions'
+import { reportPath } from '../constants'
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.getItemById = exports.getItemByName = exports.getAllItems = exports.updateItem = exports.createNewItem = exports.calcPredictedValue = exports.createAndFillWorkbook = void 0;
-
-var _xlsx = _interopRequireDefault(require("xlsx"));
-
-var _models = require("../models");
-
-var _commonFunctions = require("./common-functions");
-
-var _constants = require("../constants");
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-const createAndFillWorkbook = items => {
-  let workbook = _xlsx.default.utils.book_new();
-
+export const createAndFillWorkbook = (items) => {
+  let workbook = XLSX.utils.book_new()
   let sheetHeader = {
     header: ['Dish_name', 'Produced', 'Predicted']
-  };
-  let sheetData = [];
+  }
+  let sheetData = []
   items.forEach(item => {
     sheetData.push({
       'Dish_name': item.name,
       'Produced': item.createdTillNow,
       'Predicted': item.predictedValue
-    });
-  });
-
-  const workSheet = _xlsx.default.utils.json_to_sheet(sheetData, sheetHeader);
-
-  _xlsx.default.utils.book_append_sheet(workbook, workSheet, 'My sheet');
-
-  const fileName = 'latest-kitchen-report.xlsx';
-  (0, _commonFunctions.createFile)(fileName);
-  const filePath = _constants.reportPath + fileName;
-
-  _xlsx.default.writeFile(workbook, filePath, {
-    type: 'buffer',
-    bookType: 'xlsx'
-  });
-
-  return filePath;
-};
-
-exports.createAndFillWorkbook = createAndFillWorkbook;
-
-const calcPredictedValue = data => {
-  const mSecInDay = 86400000;
-  const mSecPassedToday = Date.now() - new Date().setHours(0, 0, 0, 0);
-  let predictedValue = data.createdTillNow / mSecPassedToday;
-  predictedValue = predictedValue * mSecInDay;
-  predictedValue = Math.round(predictedValue * 100) / 100;
-  return predictedValue;
-};
-
-exports.calcPredictedValue = calcPredictedValue;
-
-const createNewItem = data => {
-  let newItem = new _models.KitchenItem({
+    })
+  })
+  const workSheet = XLSX.utils.json_to_sheet(sheetData, sheetHeader)
+  XLSX.utils.book_append_sheet(workbook, workSheet, 'My sheet')
+  const fileName = 'latest-kitchen-report.xlsx'
+  createFile(fileName)
+  const filePath = reportPath + fileName
+  XLSX.writeFile(workbook, filePath, { type: 'buffer', bookType: 'xlsx' })
+  return filePath
+}
+export const calcPredictedValue = (data) => {
+  const mSecInDay = 86400000
+  const mSecPassedToday = Date.now() - (new Date()).setHours(0, 0, 0, 0)
+  let predictedValue = data.createdTillNow / mSecPassedToday
+  predictedValue = predictedValue * mSecInDay
+  predictedValue = Math.round(predictedValue * 100) / 100
+  return predictedValue
+}
+export const createNewItem = (data) => {
+  let newItem = new KitchenItem({
     name: data.dishName,
     quantity: data.quantity,
     createdTillNow: 0
-  });
+  })
   return new Promise((resolve, reject) => {
-    newItem.save(err => {
+    newItem.save((err) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve('Item Created');
+        resolve('Item Created')
       }
-    });
-  });
-};
-
-exports.createNewItem = createNewItem;
-
-const updateItem = data => {
+    })
+  })
+}
+export const updateItem = (data) => {
   return new Promise((resolve, reject) => {
-    _models.KitchenItem.findByIdAndUpdate(data._id, data, err => {
+    KitchenItem.findByIdAndUpdate(data._id, data, (err) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve('Item Updated');
+        resolve('Item Updated')
       }
-    });
-  });
-};
-
-exports.updateItem = updateItem;
-
-const getAllItems = () => {
+    })
+  })
+}
+export const getAllItems = () => {
   return new Promise((resolve, reject) => {
-    _models.KitchenItem.find({}, (err, items) => {
+    KitchenItem.find({}, (err, items) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve(items);
+        resolve(items)
       }
-    });
-  });
-};
-
-exports.getAllItems = getAllItems;
-
-const getItemByName = data => {
+    })
+  })
+}
+export const getItemByName = (data) => {
   return new Promise((resolve, reject) => {
-    _models.KitchenItem.findOne({
-      name: data.dishName
-    }, (err, item) => {
+    KitchenItem.findOne({ name: data.dishName }, (err, item) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve(item);
+        resolve(item)
       }
-    });
-  });
-};
-
-exports.getItemByName = getItemByName;
-
-const getItemById = id => {
+    })
+  })
+}
+export const getItemById = (id) => {
   return new Promise((resolve, reject) => {
-    _models.KitchenItem.findById(id, (err, item) => {
+    KitchenItem.findById(id, (err, item) => {
       if (err) {
-        reject(err);
+        reject(err)
       } else {
-        resolve(item);
+        resolve(item)
       }
-    });
-  });
-};
-
-exports.getItemById = getItemById;
+    })
+  })
+}
